@@ -1,4 +1,4 @@
-﻿using Newtonsoft.Json;
+using Newtonsoft.Json;
 using Newtonsoft.Json.Converters;
 using System;
 using System.Collections.Generic;
@@ -9,8 +9,7 @@ namespace DockerApiDotNet.Data
 	{
 		public string Command { get; set; }
 
-		[JsonConverter(typeof(IsoDateTimeConverter))]
-		public DateTime Created { get; set; }
+		public string Created { get; set; }
 
 		public string Id { get; set; }
 
