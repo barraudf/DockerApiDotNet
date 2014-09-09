@@ -25,6 +25,30 @@ namespace DockerApiDotNet.Data
 
 		public ContainerConfig Config { get; set; }
 
+		public string Driver { get; set; }
+
+		public string ExecDriver { get; set; }
+
+		public string HostnamePath { get; set; }
+
+		public string HostsPath { get; set; }
+
+		public string MountLabel { get; set; }
+
+		public string Name { get; set; }
+
+		public string ProcessLabel { get; set; }
+
+		public HostConfig HostConfig { get; set; }
+
+		public NetworkSettings NetworkSettings { get; set; }
+
+		public State State { get; set; }
+
+		public Dictionary<string, string> Volumes { get; set; }
+
+		public Dictionary<string, bool> VolumesRW { get; set; }
+
 		public string ShortID
 		{
 			get { return Id.Substring(0, 12); }
