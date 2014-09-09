@@ -16,7 +16,7 @@ namespace DockerApiDotNet
 
 	internal class HttpOverSocketRequest : IDisposable
 	{
-		protected const string HTTP_VERS = "HTTP/1.1";
+		protected const string HTTP_VERS = "HTTP/1.0";
 
 		public string Path { get; set; }
 		public  WebHeaderCollection Headers { get; set; }
@@ -40,7 +40,7 @@ namespace DockerApiDotNet
 #if __MonoCS__
 			if (client == null && Utils.RegExMatch(destination, @"^unix://(?<path>/.*)$", out match))
 			{
-				UnixClient socketClient = new UnixClient(match["port"].Value);
+				UnixClient socketClient = new UnixClient(match["path"].Value);
 				client = socketClient.GetStream();
 			}
 #endif
