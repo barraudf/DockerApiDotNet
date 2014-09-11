@@ -86,6 +86,23 @@ namespace DockerApiDotNet
 				throw new Exception("Server error : " + response.StatusCode + " " + response.StatusDescription);
 		}
 
+		public ContainerDiff[] GetContainerDiff(string id)
+		{
+			string path = string.Format("/containers/{0}/changes", id);
+
+			_Request.Path = path;
+			HttpOverSocketResponse response = _Request.GetResponse();
+
+			if (response.StatusCode == System.Net.HttpStatusCode.OK)
+			{
+				ContainerDiff[] ret = JsonConvert.DeserializeObject<ContainerDiff[]>(response.Content);
+
+				return ret;
+			}
+			else
+				throw new Exception("Server error : " + response.StatusCode + " " + response.StatusDescription);
+		}
+
 		#region IDisposable
 		private bool disposed = false;
 		public void Dispose()
