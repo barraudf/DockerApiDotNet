@@ -1,9 +1,11 @@
-﻿
+
 Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 2013
 VisualStudioVersion = 12.0.30501.0
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DockerApiDotNet", "DockerApiDotNet.csproj", "{695FF03D-A64A-4092-A851-D50080C5D14C}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DockerApiDotNet", "DockerApiDotNet\DockerApiDotNet.csproj", "{695FF03D-A64A-4092-A851-D50080C5D14C}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DockerApiDotNet.Console", "DockerApiDotNet.Console\DockerApiDotNet.Console.csproj", "{92DFDEA5-D146-4543-BD5C-5CFCED0E182A}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -15,6 +17,10 @@ Global
 		{695FF03D-A64A-4092-A851-D50080C5D14C}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{695FF03D-A64A-4092-A851-D50080C5D14C}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{695FF03D-A64A-4092-A851-D50080C5D14C}.Release|Any CPU.Build.0 = Release|Any CPU
+		{92DFDEA5-D146-4543-BD5C-5CFCED0E182A}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{92DFDEA5-D146-4543-BD5C-5CFCED0E182A}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{92DFDEA5-D146-4543-BD5C-5CFCED0E182A}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{92DFDEA5-D146-4543-BD5C-5CFCED0E182A}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
