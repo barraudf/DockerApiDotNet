@@ -9,7 +9,8 @@ namespace DockerApiDotNet.Data
 	{
 		public int ExitCode { get; set; }
 
-		public string FinishedAt { get; set; }
+		[JsonConverter(typeof(IsoDateTimeConverter))]
+		public DateTime FinishedAt { get; set; }
 
 		public bool Paused { get; set; }
 
@@ -19,6 +20,7 @@ namespace DockerApiDotNet.Data
 
 		public bool Running { get; set; }
 
-		public string StartedAt { get; set; }
+		[JsonConverter(typeof(IsoDateTimeConverter))]
+		public DateTime StartedAt { get; set; }
 	}
 }

@@ -9,7 +9,8 @@ namespace DockerApiDotNet.Data
 	{
 		public string Command { get; set; }
 
-		public string Created { get; set; }
+		[JsonConverter(typeof(IsoDateTimeConverter))]
+		public DateTime Created { get; set; }
 
 		public string Id { get; set; }
 
