@@ -54,6 +54,8 @@
     <Compile Include="Data\Port.cs" />
     <Compile Include="Data\RestartPolicy.cs" />
     <Compile Include="Data\State.cs" />
+    <Compile Include="Data\SystemInfo.cs" />
+    <Compile Include="Data\VersionInfo.cs" />
     <Compile Include="DockerAPIClient.cs" />
     <Compile Include="HttpOverSocketRequest.cs" />
     <Compile Include="HttpOverSocketResponse.cs" />

@@ -103,6 +103,40 @@ namespace DockerApiDotNet
 				throw new Exception("Server error : " + response.StatusCode + " " + response.StatusDescription);
 		}
 
+		public VersionInfo GetVersion()
+		{
+			string path = "/version";
+
+			_Request.Path = path;
+			HttpOverSocketResponse response = _Request.GetResponse();
+
+			if (response.StatusCode == System.Net.HttpStatusCode.OK)
+			{
+				VersionInfo ret = JsonConvert.DeserializeObject<VersionInfo>(response.Content);
+
+				return ret;
+			}
+			else
+				throw new Exception("Server error : " + response.StatusCode + " " + response.StatusDescription);
+		}
+
+		public SystemInfo GetInfo()
+		{
+			string path = "/info";
+
+			_Request.Path = path;
+			HttpOverSocketResponse response = _Request.GetResponse();
+
+			if (response.StatusCode == System.Net.HttpStatusCode.OK)
+			{
+				SystemInfo ret = JsonConvert.DeserializeObject<SystemInfo>(response.Content);
+
+				return ret;
+			}
+			else
+				throw new Exception("Server error : " + response.StatusCode + " " + response.StatusDescription);
+		}
+
 		#region IDisposable
 		private bool disposed = false;
 		public void Dispose()
