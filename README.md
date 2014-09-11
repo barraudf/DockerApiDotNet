@@ -11,7 +11,7 @@ Currently only `GET /containers/json` and `GET /containers/{id}/json` request ar
 using DockerApiDotNet;
 using DockerApiDotNet.Data;
 
-DockerAPIClient client = new DockerAPIClient("tcp://127.0.0.1:1234"))
+DockerAPIClient client = new DockerAPIClient("tcp://127.0.0.1:1234");
 
 Container[] containers = client.GetContainers();
 
