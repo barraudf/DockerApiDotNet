@@ -9,16 +9,16 @@ using DockerApiDotNet.Data;
 
 namespace DockerApiDotNet
 {
-	public class DockerAPIClient : IDisposable
+	public class DockerAPIClient
 	{
-		HttpOverSocketRequest _Request = null;
+		private string _Destination = null;
 
 		public DockerAPIClient(string destination)
 		{
-			_Request = HttpOverSocketRequest.Create(destination);
+			if (string.IsNullOrEmpty(destination))
+				throw new ArgumentException("The destination argument can not be null or empty.");
 
-			if (_Request == null)
-				throw new ArgumentException("Can't connect to socket at \"" + destination + "\".");
+			_Destination = destination;
 		}
 
 		public Container[] GetContainers(bool size = false, bool all = false, int limit = 0, string since = null, string before = null)
@@ -36,34 +36,18 @@ namespace DockerApiDotNet
 			if (before != null)
 				path += "&before=" + WebUtility.UrlEncode(before);
 
-			_Request.Path = path;
-			HttpOverSocketResponse response = _Request.GetResponse();
+			List<Container> ret = GetJsonResponse<List<Container>>(path);
 
-			if (response.StatusCode == System.Net.HttpStatusCode.OK)
-			{
-				List<Container> ret = JsonConvert.DeserializeObject<List<Container>>(response.Content);
-
-				return ret.ToArray();
-			}
-			else
-				throw new Exception("Server error : " + response.StatusCode + " " + response.StatusDescription);
+			return ret.ToArray();
 		}
 
 		public ContainerDetails GetContainer(string id)
 		{
 			string path = string.Format("/containers/{0}/json", id);
 
-			_Request.Path = path;
-			HttpOverSocketResponse response = _Request.GetResponse();
+			ContainerDetails ret = GetJsonResponse<ContainerDetails>(path);
 
-			if (response.StatusCode == System.Net.HttpStatusCode.OK)
-			{
-				ContainerDetails ret = JsonConvert.DeserializeObject<ContainerDetails>(response.Content);
-
-				return ret;
-			}
-			else
-				throw new Exception("Server error : " + response.StatusCode + " " + response.StatusDescription);
+			return ret;
 		}
 
 		public ContainerProcesses GetContainerTop(string id, string opts = "")
@@ -73,93 +57,54 @@ namespace DockerApiDotNet
 			if (!string.IsNullOrEmpty(opts))
 				path += "?ps_args=" + WebUtility.UrlEncode(opts);
 
-			_Request.Path = path;
-			HttpOverSocketResponse response = _Request.GetResponse();
+			ContainerProcesses ret = GetJsonResponse<ContainerProcesses>(path);
 
-			if (response.StatusCode == System.Net.HttpStatusCode.OK)
-			{
-				ContainerProcesses ret = JsonConvert.DeserializeObject<ContainerProcesses>(response.Content);
-
-				return ret;
-			}
-			else
-				throw new Exception("Server error : " + response.StatusCode + " " + response.StatusDescription);
+			return ret;
 		}
 
 		public ContainerDiff[] GetContainerDiff(string id)
 		{
 			string path = string.Format("/containers/{0}/changes", id);
 
-			_Request.Path = path;
-			HttpOverSocketResponse response = _Request.GetResponse();
+			ContainerDiff[] ret = GetJsonResponse<ContainerDiff[]>(path);
 
-			if (response.StatusCode == System.Net.HttpStatusCode.OK)
-			{
-				ContainerDiff[] ret = JsonConvert.DeserializeObject<ContainerDiff[]>(response.Content);
-
-				return ret;
-			}
-			else
-				throw new Exception("Server error : " + response.StatusCode + " " + response.StatusDescription);
+			return ret;
 		}
 
 		public VersionInfo GetVersion()
 		{
-			string path = "/version";
-
-			_Request.Path = path;
-			HttpOverSocketResponse response = _Request.GetResponse();
-
-			if (response.StatusCode == System.Net.HttpStatusCode.OK)
-			{
-				VersionInfo ret = JsonConvert.DeserializeObject<VersionInfo>(response.Content);
-
-				return ret;
-			}
-			else
-				throw new Exception("Server error : " + response.StatusCode + " " + response.StatusDescription);
+			VersionInfo ret = GetJsonResponse<VersionInfo>("/version");
+			return ret;
 		}
 
 		public SystemInfo GetInfo()
 		{
-			string path = "/info";
+			SystemInfo ret = GetJsonResponse<SystemInfo>("/info");
+			return ret;
+		}
 
-			_Request.Path = path;
-			HttpOverSocketResponse response = _Request.GetResponse();
+		internal void ProcessResponseCode(HttpOverSocketResponse response)
+		{
+			if (response.StatusCode != HttpStatusCode.OK)
+				throw new Exception(string.Format("Server error : {0}({1}) - {2}", response.StatusCode, response.StatusCode.ToString(), response.StatusDescription));
+		}
 
-			if (response.StatusCode == System.Net.HttpStatusCode.OK)
+		protected T GetJsonResponse<T>(string path)
+		{
+			using (HttpOverSocketRequest request = HttpOverSocketRequest.Create(_Destination))
 			{
-				SystemInfo ret = JsonConvert.DeserializeObject<SystemInfo>(response.Content);
+
+				if (request == null)
+					throw new ArgumentException("Can't connect to socket at \"" + _Destination + "\".");
+				request.Path = path;
+				HttpOverSocketResponse response = request.GetResponse();
+
+				ProcessResponseCode(response);
+
+				T ret = JsonConvert.DeserializeObject<T>(response.Content);
 
 				return ret;
 			}
-			else
-				throw new Exception("Server error : " + response.StatusCode + " " + response.StatusDescription);
 		}
-
-		#region IDisposable
-		private bool disposed = false;
-		public void Dispose()
-		{
-			Dispose(true);
-			GC.SuppressFinalize(this);
-		}
-
-		protected virtual void Dispose(bool disposing)
-		{
-			if (disposed) return;
-
-			// Dispose of managed resources here.
-			if (disposing)
-			{
-				if (_Request != null)
-					_Request.Dispose();
-			}
-
-			// Dispose of any unmanaged resources not wrapped in safe handles.
-
-			disposed = true;
-		}
-		#endregion IDisposable
 	}
 }
