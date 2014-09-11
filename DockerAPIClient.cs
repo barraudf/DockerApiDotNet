@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using System.Net;
 using System.Threading.Tasks;
 using Newtonsoft.Json;
 using DockerApiDotNet.Data;
@@ -31,9 +32,9 @@ namespace DockerApiDotNet
 			if (limit > 0)
 				path += "&limit=" + limit;
 			if (since != null)
-				path += "&since=" + System.Net.WebUtility.UrlEncode(since);
+				path += "&since=" + WebUtility.UrlEncode(since);
 			if (before != null)
-				path += "&before=" + System.Net.WebUtility.UrlEncode(before);
+				path += "&before=" + WebUtility.UrlEncode(before);
 
 			_Request.Path = path;
 			HttpOverSocketResponse response = _Request.GetResponse();
@@ -58,6 +59,26 @@ namespace DockerApiDotNet
 			if (response.StatusCode == System.Net.HttpStatusCode.OK)
 			{
 				ContainerDetails ret = JsonConvert.DeserializeObject<ContainerDetails>(response.Content);
+
+				return ret;
+			}
+			else
+				throw new Exception("Server error : " + response.StatusCode + " " + response.StatusDescription);
+		}
+
+		public ContainerProcesses GetContainerTop(string id, string opts = "")
+		{
+			string path = string.Format("/containers/{0}/top", id);
+
+			if (!string.IsNullOrEmpty(opts))
+				path += "?ps_args=" + WebUtility.UrlEncode(opts);
+
+			_Request.Path = path;
+			HttpOverSocketResponse response = _Request.GetResponse();
+
+			if (response.StatusCode == System.Net.HttpStatusCode.OK)
+			{
+				ContainerProcesses ret = JsonConvert.DeserializeObject<ContainerProcesses>(response.Content);
 
 				return ret;
 			}
